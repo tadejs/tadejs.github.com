@@ -276,6 +276,10 @@ We'll, to do this exercise, we first need to do a short breakdown.
 		<section>
 				<h3>Things will happen</h3>
 
+				<p class="fragment">hardware failure is a part of normal operation</p>
+
+				<p class="fragment">distributed computational systems, distributed databases</p>
+				
 				<aside class="notes">
 Your infrastructure actually breaks. Even on AWS, your instance reboots when that happens. Long story short, redundancy. In practice, this means that you have to stop thinking about your machines as 'the web server' and 'the db server', but just as pieces of metal that are parts of 'the web server cluster'. For most number crunching tasks, no matter how much liquid nitrogen you have at your disposal, distributed HPC is going to win. If this topic isn't interesting to you, there's PaaS providers that can abstract this away. If it is, there's a bunch of new interesting tools for your disposal:
 			i. Distributed databases
@@ -477,24 +481,26 @@ Usually, failures have a monetary dimension. This applies mostly for operational
 
 			</section>
 
-						<section>
-				<h3>Thanks</h3>
-					<p>
-						<small><a href="http://tdj.si">Tadej Štajner, TVBeat</a> / <a href="http://twitter.com/tadejtadej">@tadejtadej</a> / <a href="mailto:tadej@tvbeat.com">tadej@tvbeat.com</a> </small>
-					</p>
-					<h3>#vblatu</h3>
-
-					<img src="tvbeat.png" style="border: 0px; width: 50%; background: none;" />
-
-			</section>
-
-
 <section>
 <!--	<blockquote class="twitter-tweet" lang="en"><p>In the aerospace community, uncrewed Rocket Failures are simply Launches that are rich in learning opportunities.</p>&mdash; Neil deGrasse Tyson (@neiltyson) <a href="https://twitter.com/neiltyson/status/527270937121398784">October 29, 2014</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 -->
 <img src="tyson.png" />
 </section>
+
+						<section>
+				<h3>Thanks</h3>
+					<p>
+					<a href="http://tdj.si">Tadej Štajner, TVBeat</a> / <a href="http://twitter.com/tadejtadej">@tadejtadej</a> / <a href="mailto:tadej@tvbeat.com">tadej@tvbeat.com</a> 
+					</p>
+					<p><a href="http://tdj.si/failuremodes/">http://tdj.si/failuremodes/</a></p>
+
+
+					<img src="tvbeat.png" style="border: 0px; width: 50%; background: none;" />
+
+
+			</section>
+
 
 
 
