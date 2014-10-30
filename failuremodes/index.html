@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>What could possibly go wrong? Failure modes in software development</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Tadej Štajner - tadej@tdj.si">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>What could possibly go wrong?</h1>
+					<h3>Failure modes in software development</h3>
+					<p>
+						<small><a href="http://tdj.si">Tadej Štajner, TVBeat</a> / <a href="http://twitter.com/tadejtadej">@tadejtadej</a> / <a href="mailto:tadej@tvbeat.com">tadej@tvbeat.com</a> </small>
+					</p>
+					<h3 class="fragment highlight-red">#vblatu</h3>
+					<img src="tvbeat.png" style="border: 0px; width: 50%; background: none;" />
+					<footer><small>FRI, Ljubljana, 30.10.2014</small></footer>
+				</section>
+
+				<section>
+					<h2>About me</h2>
+					<p>
+						<ul>
+							<li>Developer at TVBeat</li>
+							<li>PhD student at Jožef Stefan International Postgraduate School.</li>
+							<li>Solving hard problems with data</li>
+						</ul>
+					</p>
+
+					<aside class="notes">
+
+					</aside>
+				</section>
+
+				<section>
+					<h2>Why this topic?</h2>
+
+					<aside class="notes">
+ Studying  here prepared me with a mindset to systematically solve hard technical problems. 
+
+ They will do a good job teaching you how to make things properly, and you're likely more up to date on this than I am. I'll talk about the parts where things don't work out properly and where I was most barefoot. 
+
+ I'm not the kind of person that looks for different ways to fail, walking around looking for banana peels to step on.  
+
+ There will be a bias towards things that apply more to back-end and data analysics systems, since this is what I work on most.
+					</aside>
+				</section>
+
+
+
+
+				<section>
+					<h2>What happens to things that you are working on?</h2>
+
+<iframe id="treemap" src="treemap.html" width="960" height="500" style="margin:0;overflow:hidden;"> </iframe>
+				
+					<aside class="notes">
+First I'll do a mental exercise. What were the results of my work in the last few years, from my perspective. It doesn't matter when it happened, nor where, nor if it was your fault. 
+
+Here's mine. Even though this chart show miserable failure, all contracts were completed, deliverables done, most even on time. What this shows is how I perceived the result to look like. This talk will be about thinking about how to make this pie have strawberries and more blueberries when I bake it again 10 years from now. 
+
+We'll, to do this exercise, we first need to do a short breakdown.
+
+					<ul>
+		<li>Politically sacked. No advice for this. If you feel that's your thing to solve, stop studying computer science and go into management consulting. It's like game of thrones, but with more cruelty and less metal weapons. 
+		</li><li> Misguided target. You can see yourself going very far very quickly running in circles. This is a product management problem in the end, which you won't learn about in CS, but small PM decision have huge impact. 
+		</li><li> Failure to learn. There's a huge class of problems that stem from the fact that small mistakes  repeat often enough, and no one bothers to prevent them. 
+		</li><li> Failure to operate: when your program works great in powerpoint, production is often less rosy.  </li>
+</ul>
+
+					</aside>
+				</section>
+
+
+
+
+
+
+				<section>
+					<h2>Failure to learn</h2>
+
+					<aside class="notes">
+			 Academic software development. 
+
+			 The majority of my work was in academia. There, the job is to produce papers and create new knowledge. I'll focus on the latter part, which makes this particular class of failures most painful, since they affect the core goal.
+
+					</aside>
+				</section>
+
+
+
+				<section>
+					<h3>Rapid feedback</h3>
+
+					<aside class="notes">
+			 So, you're setting out to generate knowledge. Good for you. While movies show knowledge being generated by scientist when stuff explodes or colourful gases start leaking, the reality that it's a much more boring process. While it may look like a hamster wheel at the first glance, it's about reducing uncertainty. You start with a complex system that you need to understand. For climate scientists, this is a planet. For sociologists, these are societies. For social media marketers, these are teenage girls on instagram. And if any one of these wants to do their job, they have to understand that system. So, science is the process of figuring out that system, one piece at a time, until it becomes an elegant model that can predict things. While the narrative always hinges on one eureka moment, it's the rapid feedback that's actually doing the work.
+		
+	A common stereotype of science is that from the outside, things are moving nowhere, and suddenly, eureka. That's not really how things work. Complex products are build by building step by step. Complex scientific problems are solved by reducing the unknown step by step.
+	
+
+	How does this look like in code? The first feature that you get in most software projects that are used in science is an REPL. The ability to iterate quickly AND have high performance code is what gives you that. And it's more important than you thing. When I was doing my code in C++, got a 20-50% perf boost compared to python numeric packages. But with compile times well above a minute even after tricks, I typically forgot what the build was meant to test for. I call this the coffee run rule. If your iteration takes longer than it takes you to walk down the hallway to make coffee, you're going to be slow and high on caffeine.  
+
+		http://www.azarask.in/blog/post/the-wrong-problem/
+
+					</aside>
+				</section>
+
+	<section>
+					<img src="albatros.png" />
+
+					<a href="http://www.azarask.in/blog/post/the-wrong-problem/"><small>http://www.azarask.in/blog/post/the-wrong-problem/</small></a>
+					<aside class="notes">
+			
+		http://www.azarask.in/blog/post/the-wrong-problem/
+
+					</aside>
+				</section>
+
+
+
+
+				<section>
+					<h3>Prototypes</h3>
+
+					<aside class="notes">
+			 Sometimes, to learn completely, is to let go. One of the big dangers is working on your prototypes so long, you become emotionally attached to them. It's good to be proud of your work, but it can be dangerous.
+
+					</aside>
+				</section>
+
+				<section>
+				<img src="panelletes.jpg" style="width: 45%;" />
+				<img src="cookies.jpg" style="width: 45%;" />
+					<aside class="notes">
+			You probably already met the age-old dilemma of do it yourself vs. find a library, trading off development time for flexibility. I see a lot of people pick a point on that axis and stick with it for life. Most do ok either way. However, I did mess up on this point - outsourcing your core problem to a 3rd party library. The inflexibility on that part obliterated any time savings I got. What is the 'core'? It's the part of your system that you spend the most time on. Business logic. Could be design, or even graphics engine. 
+					</aside>
+				</section>
+
+
+
+				<section>
+					<h3>Own your core</h3>
+
+					<p class="fragment">part of your system that you spend the most time on</p>
+
+					<aside class="notes">
+			You probably already met the age-old dilemma of do it yourself vs. find a library, trading off development time for flexibility. I see a lot of people pick a point on that axis and stick with it for life. Most do ok either way. However, I did mess up on this point - outsourcing your core problem to a 3rd party library. The inflexibility on that part obliterated any time savings I got. What is the 'core'? It's the part of your system that you spend the most time on. Business logic. Could be design, or even graphics engine. 
+					</aside>
+				</section>
+
+
+				<section>
+					<h3>Measurement</h3>
+
+					<img class="fragment" src="metrics.png" />
+					<aside class="notes">	
+			A surprisingly cheap (in all meanings of the word) method that lets you get a feeling for your systems. It's not just the alerting capability. Instrumenting parts of your system can give you an intuitive feel for how it responds to the environment, and where are its limits. This is big in debugging nasty bugs. In one case, we were able to pin down a very elusive bug only because we were able to see a query that hit the same part of the system slowing down on those occasions.
+					</aside>
+				</section>
+
+			<section>
+					<h3>We're not here to <span class="fragment highlight-green">just</span> learn.</h3>
+
+				<aside class="notes">
+					It's a business decision whether it's worth going down the rabbit hole. Often it's not worth it and auto-restart is good enough. 
+				</aside>
+
+			</section>
+
+
+			<section>
+				<h3>Summing up - learning</h3>
+
+					<ul>
+						<li class="fragment highlight-green">Quick iterations</li>
+						<li class="fragment highlight-green">Prototypes</li>
+						<li class="fragment highlight-green">Own critical parts</li>
+						<li class="fragment highlight-green">Measure</li>						
+					</ul>
+
+			</section>
+
+
+			<section>
+				<h2>Failures in operation</h2>
+
+				<div class="fragment">
+				<img src="antares.jpg" /> 
+				<footer><small>Screencap of video by Ed Sealing</small></footer>
+				</div>
+				<aside class="notes">
+]
+				</aside>
+
+			</section>
+
+		<section>
+				<h3>Sytems behaviour</h3>
+
+
+
+				<p class="fragment">how does your system respond to load?</p>
+
+				<div class="fragment">
+					<img src="envelope.gif" />
+					<footer><small>Source: Wikipedia</small></footer>
+				</div>
+
+				<aside class="notes">
+				Sometimes, it's our designs that fail. Well, often it's not that they failed, but that the system was pushed out of its operating envelope boundaries. 
+
+
+				</aside>
+
+			</section>
+
+
+		<section>
+				<h3>Sytems behaviour</h3>
+
+				<p class="fragment">is there a cliff?</p>
+
+				<ul>
+					<li>Keep the system in the happy zone</li>
+					<li>Make the system stable by design</li>
+				</ul>
+
+				<aside class="notes">
+
+			i. 'Cliffs', trends, composing. You can see this when you look at this chart of query latency vs. index size for two databases. While you're in the low parts, everything is fine. When you suddenly hit the limit where the index no longer fits in ram, your system basically stops. What do you do? 
+				1. Keep the system in the happy zone (dynamic stability)
+				2. Make the system stable by design
+			ii. Operational envelope
+
+				</aside>
+
+			</section>
+
+
+		<section>
+				<h3>Things will happen</h3>
+
+				<aside class="notes">
+Your infrastructure actually breaks. Even on AWS, your instance reboots when that happens. Long story short, redundancy. In practice, this means that you have to stop thinking about your machines as 'the web server' and 'the db server', but just as pieces of metal that are parts of 'the web server cluster'. For most number crunching tasks, no matter how much liquid nitrogen you have at your disposal, distributed HPC is going to win. If this topic isn't interesting to you, there's PaaS providers that can abstract this away. If it is, there's a bunch of new interesting tools for your disposal:
+			i. Distributed databases
+			ii. Distributed computational systems
+
+
+				</aside>
+
+			</section>
+
+		<section>
+				<h3>Babysitting</h3>
+
+				<aside class="notes">
+Sometimes your systems require just so many manual steps that are just slightly beyond automating with simple mechanical scripts. Therefore, Babysitting. This is a consequence of having inappropriate performance envelopes for your workload, and keeping the system balanced manually. If you find yourself deleting data from the database because operations become too slow, that's it. 
+				</aside>
+
+			</section>
+
+
+
+			<section>
+				<h3>Summing up - systems</h3>
+
+					<ul>
+						<li class="fragment highlight-green">Distributed systems</li>
+						<li class="fragment highlight-green">The babysitting trap</li>					
+					</ul>
+
+			</section>
+
+
+		<section>
+				<h2>Failure to communicate</h2>
+
+				<aside class="notes">
+There's a lot that can be said about communication between people. I'm not an expert there. What bit me a few times is the fact that software products, open source or not, tend to oversell and misrepresent what their capabilities and interfaces are.
+				</aside>
+
+			</section>
+
+
+		<section>
+				<h3>Abstractions</h3>
+
+					<p class="fragment">if you use this interface, an implementation can solve your problem</p>
+
+				<aside class="notes">
+Whenever you think about using a particular library or service, you consider what level of abstraction it operates at. Naturally, a good library successfully hides everything that is below that layer. It makes for a very bad experience for an Oauth library to force you to manage it's memory allocation strategy, which is several layers below. In practice, following this is the only sane way to build large systems. However, there are places where this doesn't happen, and I've noticed two patterns here:
+				</aside>
+
+			</section>
+
+
+	<section>
+				<h3>One magic button</h3>
+
+				<img class="fragment" src="easy.jpg" />
+
+				<aside class="notes">
+There's always this drive to make things as simple as possible.
+
+				</aside>
+
+			</section>
+
+
+
+	<section>
+				<h3>Leaky abstractions</h3>
+
+	<img class="fragment" src="easy.jpg" style="width: 45%;" />
+		<img class="fragment" src="submarine.jpg" style="width: 45%;"   />
+				<aside class="notes">
+			Leaking abstraction is when a system presents you with one interface, but you actually spend your time at a whole different level of abstraction. For instance, Apache Storm, an otherwise excellent component, lures you in with its promise of a very elegant model of Spouts and Bolts. Porting your code to that abstraction is relatively easy. However, operationally, you then spend time tuning the infrastructure so that it's always in its optimum operational envelope. You quickly learn that when data travels from one component to another, it traverses four buffer queues, which flush only when full. In short, this means tweaking buffer sizes to your throughput, and if your stream varies a lot, you need sophisticated dynamic balancing. In short, we were sold an elegant interface, and got a nonlinear optimization problem with tens of variables. 
+
+				</aside>
+
+			</section>
+
+
+
+
+	<section>
+				<h3>Leaky abstraction</h3>
+
+				<img class="fragment" src="magazinius.png" />
+
+				<aside class="notes">
+			I've been guilty of that sin also. My startup had this problem: Magazinius promised a simple and elegant way to design HTML5 publications that look like print. We were able to put 90% of things that designers use into the ui, but for the last 10%, you need to drop down to HTML and CSS. And due to the inherent complexity of the rendering, it was a very hard abstraction to hide. Some problems are simply hard, and just exposing one button for them won't make them simple.
+
+
+				</aside>
+
+			</section>
+
+
+	<section>
+				<h3>Lying abstraction</h3>
+
+				<p class="fragment">feature nominally exist, but with ridiculous performance envelope</p>
+				<aside class="notes">
+		Sometimes, it's just wishful thinking on behalf of the developers. With all the push to simplicity, it's very tempting to get adoption by making simple interfaces that nominally do what they say, but have a ridiculous operation envelope. MongoDB, for instance, is full of these: MapReduce, server-side scripting, query language. Sometimes it's just about ticking a feature box. 
+
+				</aside>
+
+			</section>
+
+
+			<section>
+				<h3>Summing up - communication &amp; abstraction</h3>
+
+					<ul>
+						<li class="fragment highlight-green">Fake simplicity</li>
+						<li class="fragment highlight-green">Leaky abstractions</li>
+						<li class="fragment highlight-green">Lying abstractions</li>					
+					</ul>
+
+			</section>
+
+
+
+
+	<section>
+				<h2>Failure to observe</h2>
+
+				<p class="fragment">what axis is your problem hard at?</p>
+
+				<aside class="notes">
+ A lot of 'misguided efforts' aren't just because the product is 
+		a. "What axis is your problem hard at?" One type of problem is getting into solving a problem head-first, and missing the mark on what axis is this problem hard at. 
+		b. This is also relevant for those of you that handle product development work. when you already have a vision for a solution, this vision tends to leak into your requirements model. If you really believe your customers should get a highly-available alarm clock, it's really easy to see it as a requirement even if they gave no signal that it is. 
+
+
+				</aside>
+
+			</section>
+
+
+
+	<section>
+				<h2>Performance</h2>
+
+
+
+				<aside class="notes">
+  Some things simply need to work fast. This one is easy to spot. Whether it's ensuring a small response time for the end users or saving a few 10k on your hosting bill for your batch processing jobs. However, it's also easy to imagine performance is a problem - stack overflow is full of smug answers that preach 'premature optimization' as soon as performance is a topic, simply because it's such a common misguided effort. 
+
+				</aside>
+
+			</section>
+
+<section>
+				<h2>Scale</h2>
+
+				<aside class="notes">
+  Scale is not speed. It's a business feature. It allows you to throw money at a problem, not time. It became so fashionable in the last few years that it has the same risk as performance. 
+
+				</aside>
+
+			</section>
+
+
+<section>
+				<h2>Complexity</h2>
+
+				<aside class="notes">
+Some problems are hard to solve simply because the requirements are complexity. They prepare you well for those here. I studied informatics here, and all the diagraming techniques are actually good tools to break this apart. Same applies though, there's always that urge to use that fancy dataflow diagram when you're architecting your blog. The flipside is that some problems can become easier once you look at them from the right perspective. It's a sort of a language problem. If people talk to you about managing their scripts, it sounds hard if your beard isn't long enough. If you zoom out and think about them as services, you can get a handle on them. 
+				</aside>
+
+			</section>
+<section>
+				<h2>Reliability</h2>
+
+				<aside class="notes">
+Usually, failures have a monetary dimension. This applies mostly for operational ones, but operational issues are heavily affected by design decisions. I strongly prefer designing for that instead of having restart scripts and maintenance popups, but sometimes that doesn't make sense.
+				</aside>
+
+			</section>
+
+<section>
+				<h2>Politics</h2>
+
+				<aside class="notes">
+ This one is a bit depressing, but part of reality if you work in bigger organizations. Good political standing is the difference between a 'learning experience for our team' and a 'clusterfuck'. 
+				</aside>
+
+			</section>
+
+				<section>
+				<h3>Summing up</h3>
+
+					<ul>
+						<li class="fragment highlight-green">Failures to learn</li>
+						<li class="fragment highlight-green">Failures to operate</li>
+						<li class="fragment highlight-green">Failures to abstract</li>					
+						<li class="fragment highlight-green">Failures to observe</li>					
+					</ul>
+
+			</section>
+
+						<section>
+				<h3>Thanks</h3>
+					<p>
+						<small><a href="http://tdj.si">Tadej Štajner, TVBeat</a> / <a href="http://twitter.com/tadejtadej">@tadejtadej</a> / <a href="mailto:tadej@tvbeat.com">tadej@tvbeat.com</a> </small>
+					</p>
+					<h3>#vblatu</h3>
+
+					<img src="tvbeat.png" style="border: 0px; width: 50%; background: none;" />
+
+			</section>
+
+
+<section>
+<!--	<blockquote class="twitter-tweet" lang="en"><p>In the aerospace community, uncrewed Rocket Failures are simply Launches that are rich in learning opportunities.</p>&mdash; Neil deGrasse Tyson (@neiltyson) <a href="https://twitter.com/neiltyson/status/527270937121398784">October 29, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+-->
+<img src="tyson.png" />
+</section>
+
+
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+		<script src="js/d3.min.js"></script>
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

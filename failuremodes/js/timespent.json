@@ -1,0 +1,23 @@
+{
+ "name": "All",
+ "children": [
+  { "name": "Communication", "children" : [
+    { "name": "Solving wrong problem", "size": 24, "ideal": 5 }
+    ]},
+  { "name": "Politically axed", "size": 12, "ideal":5 },
+  { 
+    "name": "Delivered", 
+    "children": [
+      { "name": "Completed, but ineffective", "size": 18, "ideal": 10},
+      { "name": "Awesome success", "size": 7, "ideal": 30}
+    ]
+  },
+  { 
+    "name": "Repeated mistakes",  
+    "children": [ 
+      { "name": "Development process failed", "size": 6, "ideal": 4}, 
+      { "name": "Repeated operational failed", "size": 10, "ideal": 4}
+    ] 
+  }
+ ]
+}
