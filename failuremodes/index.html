@@ -278,8 +278,12 @@ We'll, to do this exercise, we first need to do a short breakdown.
 
 				<p class="fragment">hardware failure is a part of normal operation</p>
 
-				<p class="fragment">distributed computational systems, distributed databases</p>
-				
+				<ul class="fragment">
+				<li>distributed computational systems</li>
+				<li>distributed databases</li>
+				</ul>
+
+
 				<aside class="notes">
 Your infrastructure actually breaks. Even on AWS, your instance reboots when that happens. Long story short, redundancy. In practice, this means that you have to stop thinking about your machines as 'the web server' and 'the db server', but just as pieces of metal that are parts of 'the web server cluster'. For most number crunching tasks, no matter how much liquid nitrogen you have at your disposal, distributed HPC is going to win. If this topic isn't interesting to you, there's PaaS providers that can abstract this away. If it is, there's a bunch of new interesting tools for your disposal:
 			i. Distributed databases
@@ -493,7 +497,7 @@ Usually, failures have a monetary dimension. This applies mostly for operational
 					<p>
 					<a href="http://tdj.si">Tadej Štajner, TVBeat</a> / <a href="http://twitter.com/tadejtadej">@tadejtadej</a> / <a href="mailto:tadej@tvbeat.com">tadej@tvbeat.com</a> 
 					</p>
-					<p><a href="http://tdj.si/failuremodes/">http://tdj.si/failuremodes/</a></p>
+					<p><a href="http://tdj.si/failuremodes/">http://tdj.si/failuremodes/</a> (press S for notes)</p>
 
 
 					<img src="tvbeat.png" style="border: 0px; width: 50%; background: none;" />
